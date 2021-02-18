@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pomodoro Clock Assignment</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<style>
+		body
+		{
+			background-color: #ffb380
+		}
+            
+		.container{
+			margin:auto;
+			height: 460px;
+			width: 220px;
+			background-color: #1a0d00;
+			opacity:0.9;
+			border-radius: 10px;
+			vertical-align: middle;
+			align-self: center;
+			box-shadow: 10px 10px 5px black;  
+		}
+
+		h1,h6
+		{
+			color: white;
+		}
+
+		#settings
+		{
+            border-top-style: dotted;
+            border-right-style: none;
+            border-bottom-style: dotted;
+            border-left-style: none;
+        }
+
+        #pomodoro,#settings,#buttons
+        {
+        	padding-top:15px;
+        	padding-bottom:15px;
+        }
+
+        #bk
+        {
+          color: #ff471a  
+        }
+
+        #wk
+        {
+        	color: #00cccc
+        }
+
+        button
+        {
+           background-color: black;
+           color: white;
+           border-radius: 5px;
+        }
+
+        #status
+        {
+        	padding-top: 20px;
+        	height:50px;
+        	color: white;
+        	font-size: large;
+        }
+
+        .timerDisplay
+        {
+	        background-color: white;
+        	height:180px;
+        	width:180px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 170px;
+            border: 10px solid grey;
+            margin: 0 auto;
+            padding: 2px;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg==), url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg==),url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=);
+            background-repeat: no-repeat;
+            background-size: 0 2px, 0 100%, 0% 2px;
+            background-position: top center, top center, bottom center;
+            -webkit-animation: drawBorderFromCenter 180s;
+}
+@-webkit-keyframes drawBorderFromCenter {
+    0% {
+      background-size: 0 2px, 0 0, 100% 100%;
+    }
+    20% {
+      background-size: 100% 2px, 100% 0, 100% 100%;
+    }
+    66%
+    {
+      background-size: 100% 2px, 100% 98%, 100% 100%;
+    }
+    99%
+    {
+      background-size: 100% 2px, 100% 98%, 0 2px;
+    }
+}
+    #time
+        {
+        	height:150px;
+        	width:150px;
+        	position: absolute;
+        	background-color: white;
+        	color:#00cccc;
+        	line-height: 160px;
+        	bottom:435px;
+        	left:608px;
+        }
+
+	</style>
+	</head>
+<body>
+<div class="container" align="center">
+
+  <div class="row" id="pomodoro">  
+  <div class="timerDisplay"><h1 id="time">25:00</h1></div>
+  <div id="status">Session 1</div>
+ </div>
+
+  <div class="row" id="settings">
+
+      <div class="col-sm-6" id="work">
+      <h6><p>session time</p></h6>
+      <div id="wk"><span id="work-min">25</span> mins</div>
+      <button class="btn-settings" id="work-minus">-</button>
+      <button class="btn-settings" id="work-plus">+</button>
+      </div>
+    
+      <div class="col-sm-6" id="break">
+      <h6><p>break time</p></h6>
+      <div id="bk"><span id="break-min">5</span> mins</div>
+      <button class="btn-settings" id="break-minus">-</button>
+      <button class="btn-settings" id="break-plus">+</button>
+      </div>
+ </div>
+
+ <div class="row" id="buttons">
+<div class="col-sm-6">
+ <button id="start-btn" class="btn">Start</button>
+</div>
+<div class = "col-sm-6">
+ <button id="reset" class="btn">Reset</button>
+</div>
+ </div>
+
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script>
+var countdown = 0; 
+var seconds = 1500;
+var workTime = 25;
+var breakTime = 5;
+var isBreak = true;
+var isPaused = true;
+
+var statusBar = document.querySelector("#status");
+var timerDisplay = document.querySelector("#time");
+var startBtn = document.querySelector("#start-btn");
+var resetBtn = document.querySelector("#reset");
+var workMin = document.querySelector("#work-min");
+var breakMin = document.querySelector("#break-min");
+var timerColor = document.querySelector(".timerDisplay")
+
+startBtn.addEventListener('click', function() {
+  clearInterval(countdown);
+  isPaused = !isPaused;
+  if (!isPaused) {
+    countdown = setInterval(timer, 1000);
+  }
+})
+
+resetBtn.addEventListener('click', function() {
+  clearInterval(countdown);
+  seconds = workTime * 60;
+  countdown = 0;
+  isPaused = true;
+  isBreak = true;
+})
+
+function timer() {
+  seconds --;
+  if (seconds < 0) {
+    clearInterval(countdown);
+    seconds = (isBreak ? breakTime : workTime) * 60;
+    isBreak = !isBreak;
+    countdown = setInterval(timer, 1000);
+  }
+}
+
+var increment = 1;
+
+var incrementFunctions =
+    {"#work-plus": function () { workTime = Math.min(workTime + increment, 60)},
+     "#work-minus": function () { workTime = Math.max(workTime - increment, 0)},
+     "#break-plus": function () { breakTime = Math.min(breakTime + increment, 60)},
+     "#break-minus": function () { breakTime = Math.max(breakTime - increment, 0)}};
+
+for (var key in incrementFunctions) {
+    if (incrementFunctions.hasOwnProperty(key)) {
+      document.querySelector(key).onclick = incrementFunctions[key];
+    }
+}
+
+function countdownDisplay() {
+  var minutes = Math.floor(seconds / 60);
+  var remainderSeconds = seconds % 60;
+  timerDisplay.innerHTML = `${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+}
+
+function buttonDisplay() {
+  if (isPaused && countdown === 0) {
+    startBtn.innerHTML = "Start";
+  } else if (isPaused && countdown !== 0) {
+    startBtn.innerHTML = "Continue"; 
+  } else {
+    startBtn.innerHTML = "Pause";
+  }
+}
+
+function updateHTML() {
+  countdownDisplay();
+  buttonDisplay();
+  if(isBreak ==true)
+  {
+  	statusBar.innerHTML = "Session 1";
+  	timerDisplay.style.color = "#00cccc";
+  	timerColor.style.backgroundImage="url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg==), url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg==),url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=)";
+  	document.querySelector(".timerDisplay").style.animationDuration = breakTime	;
+  } 
+  else 
+  {
+   statusBar.innerHTML = "Break!";
+   timerDisplay.style.color = "#ff471a"
+   timerColor.style.backgroundImage="url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP87y5VDwAFjgHhTGbPPAAAAABJRU5ErkJggg==),url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP87y5VDwAFjgHhTGbPPAAAAABJRU5ErkJggg==),url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=)";
+ 	document.querySelector(".timerDisplay").style.animationDuration = workTime;
+  }
+  workMin.innerHTML = workTime;
+  breakMin.innerHTML = breakTime;  
+}
+
+window.setInterval(updateHTML, 100);
+
+document.onclick = updateHTML;
+</script>
+</html>
